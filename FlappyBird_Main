@@ -1,0 +1,37 @@
+import pygame
+from pygame.locals import QUIT, VIDEORESIZE, HWSURFACE, DOUBLEBUF, RESIZABLE
+
+pygame.init()
+
+# Configurer l'écran
+screen = pygame.display.set_mode((500, 500), HWSURFACE | DOUBLEBUF | RESIZABLE)
+
+# Images
+img = pygame.image.load("/Users/cyprienvenard/Documents/Ecole/2023:2024/NSI/FlappyBird.py/img/img.png").convert()
+img2 = pygame.image.load("/Users/cyprienvenard/Documents/Ecole/2023:2024/NSI/FlappyBird.py/img/img2.gif").convert()
+
+
+# Fontion pour ajuster la taille du fond
+def resize_window(new_size):
+
+    global screen, img
+    screen = pygame.display.set_mode(new_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+    screen.blit(pygame.transform.scale(img, new_size), (0, 0))
+    screen.blit(pygame.transform.scale(img2, new_size), (0, 0))
+    pygame.display.flip()
+
+
+
+# Boucle du jeu
+run = True
+while run:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            run = False
+        elif event.type == VIDEORESIZE:
+            resize_window(event.dict['size'])
+    
+    pygame.display.update()
+
+pygame.quit()
+
