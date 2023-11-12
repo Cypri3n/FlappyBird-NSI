@@ -35,3 +35,98 @@ while run:
 
 pygame.quit()
 
+
+
+
+
+
+
+
+
+
+# début de code rudimentaire
+'''
+'''     
+Projet Flappy Bird 
+Code cahier des charge classique 
+
+Définir 3 zones pour chaque obstacle, Haut, milieu ou bas.
+A chaque obstacle, la zone de passage est choisie aléatoirement
+L'oiseau tente un passage aléatoire en volant au niveau d'une de ces 3 zones
+Si cela concorde, l'oiseau passe et le jeu continu sinon le jeu s'arrête 
+50pts si 4 obstacles franchis (score max)
+Sinon 3 pts par obstacle franchi
+'''
+
+
+# coding: utf-8
+
+from random import randint 
+
+
+bas = 1
+milieu = 2
+haut = 3 
+
+oiseau = 0 
+
+obstacle = 0
+
+pts = 0 
+
+nbre_obstacle = 0 
+
+
+while nbre_obstacle <4 :
+    oiseau = randint(1,3)
+    obstacle = randint(1,3)
+    if oiseau == obstacle :
+        pts += 4 
+        nbre_obstacle +=1 
+    else :
+        break #!pas de break!
+
+if nbre_obstacle == 4 :
+    pts = 50 
+
+print (f"L'oiseau a dépassé {nbre_obstacle} obstacles")
+print (f"Cela donne {pts} points ")
+'''
+
+#élément necessaire à l'ouverture du csv
+''' 
+characters_tab = []
+with open("Characters.csv", mode='r', encoding='utf-8') as f:
+    lines = f.readlines()
+    key_line = lines[0].strip()
+    keys = key_line.split(";")
+    for line in lines[1:]:
+        line = line.strip()
+        values = line.split(';')
+        dico = {}
+        for i in range(len(keys)):
+            dico[keys[i]] = values[i]
+        characters_tab.append(dico)
+    
+for character in characters_tab:
+    if character['Name'] == 'Rose Granger-Weasley':
+        print(f"La maison de Rose Granger-Weasley est {character['House']}")    
+    if character['Name'] == 'Seamus Finnigan':
+        print(f"Le patronus de Seamus Finnigan est {character['Patronus']}")
+    if character['Name'] == 'Hermione Jean Granger':
+        print(f"""La couleur des cheveux d'Hermione Jean Granger est {character['Hair colour']}""")
+
+
+# Création 'un index par personnage, c'est à dire un dictionnaire de dictionnaires.
+
+characters_index = {character['Name'] : character for character in characters_tab}
+
+# Affichage de l'index pour vérification
+
+print(characters_index)
+
+# Utilisation de cet index pour répondre aux questions précédentes
+print(f"\nLa maison de Rose Granger-Weasley est {characters_index['Rose Granger-Weasley']['House']}")    
+print(f"Le patronus de Seamus Finnigan est {characters_index['Seamus Finnigan']['Patronus']}")
+print(f"""La couleur des cheveux d'Hermione Jean Granger est {characters_index['Hermione Jean Granger']['Hair colour']}""")
+
