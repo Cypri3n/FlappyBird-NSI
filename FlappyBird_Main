@@ -1,36 +1,100 @@
 import pygame
 from pygame.locals import QUIT, VIDEORESIZE, HWSURFACE, DOUBLEBUF, RESIZABLE
+#from pygame.sprite import _Group
 
 pygame.init()
 
+clock = pygame.time.Clock()
+fps = 60
+
 # Configurer l'écran
-screen = pygame.display.set_mode((500, 500), HWSURFACE | DOUBLEBUF | RESIZABLE)
+
+screen_widht = 576
+screen_height = 1248
+
+# changer les valeurs de l'écran par des variables de préférence
+screen = pygame.display.set_mode((screen_widht, screen_height), HWSURFACE | DOUBLEBUF | RESIZABLE)
+pygame.display.set_caption("Flappy Bird")
 
 # Images
-img = pygame.image.load("/Users/cyprienvenard/Documents/Ecole/2023:2024/NSI/FlappyBird.py/img/img.png").convert()
-img2 = pygame.image.load("/Users/cyprienvenard/Documents/Ecole/2023:2024/NSI/FlappyBird.py/img/img2.gif").convert()
+
+# l'image avec un RZ (resize) veut tire que je l'ai mise à 200% de sa taille, il suffit de l'enlever
+# pour se retrouver avec le format de base
+
+bg_day = pygame.image.load("sprites/background-dayRZ.png").convert()
+base = pygame.image.load("sprites/baseRZ.png").convert()
 
 
-# Fontion pour ajuster la taille du fond
+"""
+# Fonction pour ajuster la taille du fond
 def resize_window(new_size):
 
-    global screen, img
+    global screen, bg_day#,img
     screen = pygame.display.set_mode(new_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
-    screen.blit(pygame.transform.scale(img, new_size), (0, 0))
-    screen.blit(pygame.transform.scale(img2, new_size), (0, 0))
+    #screen.blit(pygame.transform.scale(img, new_size), (0, 0))
+    screen.blit(pygame.transform.scale(bg_day, new_size), (0, 0))
     pygame.display.flip()
+"""
+# création des différentes classes 
+
+""" 
+Si vous voulez savoir ce qu'est la classe Sprite, c'est pas forcément nécéssaire
+mais je pose ça là, sachant qu'il faut déjà savoir ce qu'est une classe avant d'aller voir là bas
+https://fr.wikibooks.org/wiki/Pygame/Introduction_au_module_Sprite
+"""
+
+class Bird(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        # la redimension de l'image créer un rectangle noir autour de l'image donc je passe pour le moment
+        self.image = pygame.image.load("sprites/yellowbird-midflap.png").convert()
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+
+bird_group = pygame.sprite.Group()
+
+flappy = Bird(100, int(screen_height / 2))
+
+bird_group.add(flappy)
+
+# affectation des vcariables de jeu
+
+ground_scroll = 0
+scroll_speed = 2
 
 
 
 # Boucle du jeu
+
+
 run = True
+
 while run:
+
+    # empeche la boucle de se répéter trop rapidement
+    clock.tick(fps)
+
+    # dessine l'arrière plan
+    screen.blit(bg_day,(0,0) )
+
+    bird_group.draw(screen)
+
+
+    # dessine le sol
+    screen.blit(base,(ground_scroll,1024) )
+    ground_scroll -= scroll_speed
+
+    if ground_scroll <= -48:
+        ground_scroll = 0
+
+
     for event in pygame.event.get():
         if event.type == QUIT:
             run = False
+        """
         elif event.type == VIDEORESIZE:
             resize_window(event.dict['size'])
-    
+        """
     pygame.display.update()
 
 pygame.quit()
@@ -41,12 +105,13 @@ pygame.quit()
 
 
 
-
+"""
 
 
 # début de code rudimentaire
+
 '''
-'''     
+
 Projet Flappy Bird 
 Code cahier des charge classique 
 
@@ -76,25 +141,24 @@ pts = 0
 
 nbre_obstacle = 0 
 
+#partie de l'ordinateur
 
-while nbre_obstacle <4 :
+while nbre_obstacle < 4 and oiseau == obstacle:
     oiseau = randint(1,3)
     obstacle = randint(1,3)
     if oiseau == obstacle :
-        pts += 4 
+        pts += 3 
         nbre_obstacle +=1 
-    else :
-        break #!pas de break!
 
 if nbre_obstacle == 4 :
     pts = 50 
 
 print (f"L'oiseau a dépassé {nbre_obstacle} obstacles")
 print (f"Cela donne {pts} points ")
-'''
+
 
 #élément necessaire à l'ouverture du csv
-''' 
+
 characters_tab = []
 with open("Characters.csv", mode='r', encoding='utf-8') as f:
     lines = f.readlines()
@@ -102,6 +166,7 @@ with open("Characters.csv", mode='r', encoding='utf-8') as f:
     keys = key_line.split(";")
     for line in lines[1:]:
         line = line.strip()
+        
         values = line.split(';')
         dico = {}
         for i in range(len(keys)):
@@ -114,7 +179,7 @@ for character in characters_tab:
     if character['Name'] == 'Seamus Finnigan':
         print(f"Le patronus de Seamus Finnigan est {character['Patronus']}")
     if character['Name'] == 'Hermione Jean Granger':
-        print(f"""La couleur des cheveux d'Hermione Jean Granger est {character['Hair colour']}""")
+        print(f"La couleur des cheveux d'Hermione Jean Granger est {character['Hair colour']}")
 
 
 # Création 'un index par personnage, c'est à dire un dictionnaire de dictionnaires.
@@ -128,5 +193,6 @@ print(characters_index)
 # Utilisation de cet index pour répondre aux questions précédentes
 print(f"\nLa maison de Rose Granger-Weasley est {characters_index['Rose Granger-Weasley']['House']}")    
 print(f"Le patronus de Seamus Finnigan est {characters_index['Seamus Finnigan']['Patronus']}")
-print(f"""La couleur des cheveux d'Hermione Jean Granger est {characters_index['Hermione Jean Granger']['Hair colour']}""")
+print(f"La couleur des cheveux d'Hermione Jean Granger est {characters_index['Hermione Jean Granger']['Hair colour']}")
 
+"""
