@@ -1,17 +1,50 @@
 '''
 Projet Flappy Bird 
-Définir 3 zones pour chaque obstacle, Haut, milieu ou bas.
-A chaque obstacle, la zone de passage est choisie aléatoirement
+
+On fait jouer automatiquement dix fois 
+chaque personnage d'Harry Potter au jeu suivant :
+Flappy Bird
+A chaque obstacle, la zone de passage est choisie aléatoirement entre 3 zones
 L'oiseau tente un passage aléatoire en volant au niveau d'une de ces 3 zones
 Si cela concorde, l'oiseau passe et le jeu continu sinon le jeu s'arrête 
 50pts si 4 obstacles franchis (score max)
 Sinon 4 pts par obstacle franchi
+L'oiseau peut passer au max 4 obstacles
+On fait une moyenne des 10 résultats pour chaque personnage 
+qu'on affiche dans l'ordre croissant
+
+
+Auteurs :
+Cyprien Venard
+Paul Di Prizio
+Odon Prouille
+
+Version :
+
+
+Date de dernière révision :
+
+
+Adresse Github: 
+https://github.com/Cypri3n/FlappyBird-NSI/tree/main
 
 '''
+# coding: utf-8
 
-
-
+#import des modules
+from random import randint
 import pygame
+
+
+#définition des constantes
+
+
+#définitionn des fonctions dans l'ordre d'utlilisation
+
+
+
+#Début du programme principal
+
 from pygame.locals import QUIT, VIDEORESIZE, HWSURFACE, DOUBLEBUF, RESIZABLE
 #from pygame.sprite import _Group
 
