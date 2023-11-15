@@ -36,6 +36,7 @@ from random import randint
 import pygame
 
 
+
 #définition des constantes
 
 
@@ -69,7 +70,10 @@ pygame.display.set_caption("Flappy Bird")
 
 bg_day = pygame.image.load("sprites/background-dayRZ.png").convert()
 base = pygame.image.load("sprites/baseRZ.png").convert()
+message = pygame.image.load("sprites/messageRZ.png").convert_alpha()
 
+def number_png(index):
+    return pygame.image.load(f"sprites/{index}.png").convert_alpha()
 
 """
 # Fonction pour ajuster la taille du fond
@@ -80,7 +84,22 @@ def resize_window(new_size):
     #screen.blit(pygame.transform.scale(img, new_size), (0, 0))
     screen.blit(pygame.transform.scale(bg_day, new_size), (0, 0))
     pygame.display.flip()
+
 """
+
+# affectation des variables de jeu
+
+ground_scroll = 0
+scroll_speed = 5
+flying = False
+game_over = False
+pipe_gap = 200
+pipe_frequency = 1500 # millisecondes
+last_pipe = pygame.time.get_ticks() - pipe_frequency
+pass_pipe = False
+game_score = 0
+number = 0
+
 # création des différentes classes 
 
 """ 
@@ -96,37 +115,70 @@ class Bird(pygame.sprite.Sprite):
         self.index = 0
         self.counter = 0
         for num in range(1,4):
-            img = pygame.image.load(f"sprites/yellowbird-{num}.png").convert()
+            img = pygame.image.load(f"sprites/yellowbird-{num}RZ.png").convert_alpha()
             self.images.append(img)
         # la redimension de l'image créer un rectangle noir autour de l'image donc je passe pour le moment
         self.image = self.images[self.index]
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
+        self.velocity = 0
+        self.clicked = False
 
     def update(self):
-        #actualise l'animation
-        self.counter += 1
-        flap_cooldown = 5
-        if self.counter > flap_cooldown:
-            self.counter = 0
-            self.index += 1
-            if self.index >= len(self.images):
-                self.index = 0
+        
+        # gravité
+        if flying == True:
+            self.velocity += 0.5
+            if self.rect.bottom < 1024:
+                self.rect.y +=  int(self.velocity)
+            if self.velocity >= 8:
+                self.velocity = 8
+        if game_over == False:
+            # saut
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
+                self.velocity = -10
+            if not pygame.mouse.get_pressed()[0] == 1 :
+                self.clicked = False
+            #actualise l'animation
+            self.counter += 1
+            flap_cooldown = 5
+            if self.counter > flap_cooldown:
+                self.counter = 0
+                self.index += 1
+                if self.index >= len(self.images):
+                    self.index = 0
 
-            self.image = self.images[self.index]
+                self.image = self.images[self.index]
+            # tourner l'oiseau
+            self.image = pygame.transform.rotate(self.images[self.index],-self.velocity * 2)
+        else:
+            self.image = pygame.transform.rotate(self.images[self.index],-90)
+
+class Pipe(pygame.sprite.Sprite):
+    def __init__(self, x, y, position):
+        pygame.sprite.Sprite.__init__(self)    
+        self.image = pygame.image.load("sprites/pipe-greenRZ.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        # position 1 pour le sprite haut position -1 pour le sprite bas
+        if position == 1:
+            self.image = pygame.transform.flip(self.image, False, True)
+            self.rect.bottomleft = [x,y - int(pipe_gap / 2)]
+        elif position == -1:
+            self.rect.topleft = [x,y + int(pipe_gap / 2)]
+
+    def update(self):
+        if game_over == False:
+            self.rect.x -= scroll_speed
+        if self.rect.right < 0:
+            self.kill()
 
 bird_group = pygame.sprite.Group()
+pipe_group = pygame.sprite.Group()
+
 
 flappy = Bird(100, int(screen_height / 2))
-
 bird_group.add(flappy)
-
-# affectation des variables de jeu
-
-ground_scroll = 0
-scroll_speed = 2
-
-
 
 # Boucle du jeu
 
@@ -144,12 +196,62 @@ while run:
     # dessine l'arrière plan
     screen.blit(bg_day,(0,0) )
 
+    if flying == False and game_over != True:
+        screen.blit(message,(99,249))
+
+    # créer l'oiseau
     bird_group.draw(screen)
     bird_group.update()
 
+    pipe_group.draw(screen)
+    pipe_group.update()
+
     # dessine le sol
     screen.blit(base,(ground_scroll,1024) )
-    ground_scroll -= scroll_speed
+
+    # check le score
+
+    if len(pipe_group) > 0:
+        if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.left\
+            and bird_group.sprites()[0].rect.left < pipe_group.sprites()[0].rect.right\
+            and pass_pipe == False:
+            pass_pipe = True
+        if pass_pipe == True:
+            if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.right:
+                pass_pipe = False
+                game_score += 1
+
+    # vérifier les collisions
+    if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top < 0:
+        game_over = True
+
+    # check si l'oiseau touche le sol
+    
+    if flappy.rect.bottom >= 1024:
+        game_over = True
+        flying = False
+
+    # affichage du game_score
+
+    number = list(str(game_score))
+    for img in range(len(number)):
+        
+        screen.blit(number_png(number[img]),(img * 24,0))
+
+    if game_over == False and flying == True:
+
+        # génère de nouveaux tuyaux
+
+        time_now = pygame.time.get_ticks()
+        if time_now - last_pipe > pipe_frequency:
+            pipe_height = randint(-115,116)
+            btm_pipe = Pipe(screen_widht,int(screen_height/2) + pipe_height, -1)
+            top_pipe = Pipe(screen_widht,int(screen_height/2) + pipe_height, 1)
+            pipe_group.add(btm_pipe, top_pipe)
+            last_pipe = time_now
+            
+
+        ground_scroll -= scroll_speed
 
     if ground_scroll <= -48:
         ground_scroll = 0
@@ -158,6 +260,8 @@ while run:
     for event in pygame.event.get():
         if event.type == QUIT:
             run = False
+        if event.type == pygame.MOUSEBUTTONDOWN and flying == False and game_over == False:
+            flying = True
         """
         elif event.type == VIDEORESIZE:
             resize_window(event.dict['size'])
