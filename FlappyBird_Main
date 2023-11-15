@@ -1,3 +1,16 @@
+'''
+Projet Flappy Bird 
+Définir 3 zones pour chaque obstacle, Haut, milieu ou bas.
+A chaque obstacle, la zone de passage est choisie aléatoirement
+L'oiseau tente un passage aléatoire en volant au niveau d'une de ces 3 zones
+Si cela concorde, l'oiseau passe et le jeu continu sinon le jeu s'arrête 
+50pts si 4 obstacles franchis (score max)
+Sinon 4 pts par obstacle franchi
+
+'''
+
+
+
 import pygame
 from pygame.locals import QUIT, VIDEORESIZE, HWSURFACE, DOUBLEBUF, RESIZABLE
 #from pygame.sprite import _Group
