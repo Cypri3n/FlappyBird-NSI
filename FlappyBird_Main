@@ -142,7 +142,9 @@ for x in range (1, len(liste_scores_finaux)):
 #classement par ordre décroissant
 liste_scores_finaux.reverse()
 
-# Définir la taille de chaque partie
+print(liste_scores_finaux)
+
+"""# Définir la taille de chaque partie
 taille_partie = 10  
 
 # Diviser la liste en parties
@@ -151,7 +153,7 @@ parties = [liste_scores_finaux[i:i + taille_partie] for i in range(0, len(liste_
 # Afficher chaque partie
 for partie in parties:
     print(partie)      
-
+"""
 
 
 
@@ -196,9 +198,13 @@ pygame.display.set_caption("Flappy Bird")
 bg_day = pygame.image.load("sprites/background-dayRZ.png").convert()
 base = pygame.image.load("sprites/baseRZ.png").convert()
 message = pygame.image.load("sprites/messageRZ.png").convert_alpha()
+restart = pygame.image.load("sprites/restartRZ.png").convert()
+ranking = pygame.image.load("sprites/rankingRZ.png").convert_alpha()
+gm_img = pygame.image.load("sprites/gameoverRZ.png").convert_alpha()
 
 def number_png(index):
     return pygame.image.load(f"sprites/{index}.png").convert_alpha()
+
 
 """
 # Fonction pour ajuster la taille du fond
@@ -224,6 +230,9 @@ last_pipe = pygame.time.get_ticks() - pipe_frequency
 pass_pipe = False
 game_score = 0
 number = 0
+leaderboard = False
+text_font = pygame.font.SysFont("Arial", 20)
+Y = 0
 
 # création des différentes classes 
 
@@ -232,6 +241,19 @@ Si vous voulez savoir ce qu'est la classe Sprite, c'est pas forcément nécéssa
 mais je pose ça là, sachant qu'il faut déjà savoir ce qu'est une classe avant d'aller voir là bas
 https://fr.wikibooks.org/wiki/Pygame/Introduction_au_module_Sprite
 """
+
+
+def reset_game():
+    pipe_group.empty()
+    flappy.rect.x = 100
+    flappy.rect.y = int(screen_height / 2)
+    game_score = 0
+    return game_score
+
+def draw_text(text, font, color, x, y):
+    img = font.render(text, True, color)
+    screen.blit(img, (x, y))
+
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -298,9 +320,33 @@ class Pipe(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+class Button():
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+
+    def draw(self):
+
+        action = False
+
+        # récupérer la position du curseur
+        pos = pygame.mouse.get_pos()
+        # vérifie si la souris passe sur le boutton
+
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                action = True
+        # affiche l'image
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+        return action
+
 bird_group = pygame.sprite.Group()
 pipe_group = pygame.sprite.Group()
 
+restart_button = Button(screen_widht / 2 - 120, screen_height / 2 + 350, restart)
+ranking_button = Button(screen_widht - 120, screen_height - 74, ranking)
 
 flappy = Bird(100, int(screen_height / 2))
 bird_group.add(flappy)
@@ -382,6 +428,43 @@ while run:
         ground_scroll = 0
 
 
+
+    # check pour un game over et reset
+    if game_over == True:
+
+        screen.blit(gm_img,(screen_widht / 2 - 192 , 150))
+
+        if ranking_button.draw() == True:
+            leaderboard = True
+        if leaderboard == True:
+            screen.fill((0,0,0))
+
+            for i in range(len(liste_scores_finaux)):
+                Y += 20
+                if Y > 1024:
+                    Y = 1024
+                
+                
+                draw_text(f"Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}",text_font, (254,254,254), 100, Y)
+                if i == len(liste_scores_finaux):
+                    Y= 0
+                print(Y)
+#                for event in pygame.event.get():
+#                    if event.type == pygame.KEYDOWN:
+#                        if event.key == pygame.K_DOWN:
+#                            Y -= 20
+#                            draw_text(f"Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}",text_font, (254,254,254), 100, Y)
+#                            print (Y)
+#                    else:
+#                        ptint('r')
+
+                         
+        if restart_button.draw() == True:
+            game_over = False
+            leaderboard = False
+            score = reset_game()
+        
+
     for event in pygame.event.get():
         if event.type == QUIT:
             run = False
@@ -391,6 +474,8 @@ while run:
         elif event.type == VIDEORESIZE:
             resize_window(event.dict['size'])
         """
+
+    pygame.display.flip()
     pygame.display.update()
 
 pygame.quit()
