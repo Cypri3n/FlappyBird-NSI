@@ -75,6 +75,99 @@ def partie(x):
 oiseau = 0
 obstacle = 0
 
+# programme de tri
+
+#ouvre le csv et le transforme en liste contenant des dicos
+characters_liste_de_dico = []
+
+with open("Characters.csv", mode='r', encoding='utf-8') as f:
+    lignes = f.readlines()
+    cles_de_ligne = lignes[0].strip()
+    keys = cles_de_ligne.split(";")
+    for line in lignes[1:]:
+        line = line.strip()
+        valeurs = line.split(';')
+        dico = {}
+        for i in range(len(keys)):
+            dico[keys[i]] = valeurs[i]
+        characters_liste_de_dico.append(dico)
+        for z in range (23):
+            dico.pop
+
+#transforme en liste de liste de toutes les caractéristiques
+listes_de_liste_characters = [list(dico.values()) for dico in characters_liste_de_dico]
+
+
+#transforme en une liste de chaque nom dans une liste
+liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
+
+
+#transforme en un dico de chaque nom dans une liste
+dico_chaque_nom = [{liste[1]} for liste in listes_de_liste_characters]
+
+resultats = []
+liste_scores = []
+
+
+
+for i in range (10):
+     for i in range(len(dico_chaque_nom)) :
+         resultats = partie(liste_nom[i])
+         liste_scores.append(resultats)
+
+
+somme = 0
+
+liste_scores_finaux = []
+
+# somme des scores pour un score total
+
+for x in range(len(liste_scores)):
+    for i in range (1, len(liste_scores[x])):
+        somme += liste_scores[x][i]       
+        if i == len(liste_scores[x])-1:
+            somme = somme / (len(liste_scores[x]) - 1)
+            liste_scores_finaux.append([liste_scores[x][0]])
+            liste_scores_finaux[x].append(somme)
+            somme = 0
+
+
+# tri de la liste
+
+for x in range (1, len(liste_scores_finaux)):
+    while liste_scores_finaux[x][1] < liste_scores_finaux[x - 1][1] and x > 0:
+        liste_scores_finaux[x], liste_scores_finaux[x - 1] = liste_scores_finaux[x - 1], liste_scores_finaux[x]
+        x -= 1
+
+#classement par ordre décroissant
+liste_scores_finaux.reverse()
+
+# Définir la taille de chaque partie
+taille_partie = 10  
+
+# Diviser la liste en parties
+parties = [liste_scores_finaux[i:i + taille_partie] for i in range(0, len(liste_scores_finaux), taille_partie)]
+
+# Afficher chaque partie
+for partie in parties:
+    print(partie)      
+
+
+
+
+
+"""
+
+PYGAME
+
+"""
+
+
+
+
+
+
+
 
 #Début du programme principal
 
@@ -301,57 +394,4 @@ while run:
     pygame.display.update()
 
 pygame.quit()
-
-
-
-
-
-#ouvre le csv et le transforme en liste contenant des dicos
-characters_liste_de_dico = []
-
-with open("Characters.csv", mode='r', encoding='utf-8') as f:
-    lignes = f.readlines()
-    cles_de_ligne = lignes[0].strip()
-    keys = cles_de_ligne.split(";")
-    for line in lignes[1:]:
-        line = line.strip()
-        valeurs = line.split(';')
-        dico = {}
-        for i in range(len(keys)):
-            dico[keys[i]] = valeurs[i]
-        characters_liste_de_dico.append(dico)
-        for z in range (23):
-            dico.pop
-
-#transforme en liste de liste de toutes les caractéristiques
-listes_de_liste_characters = [list(dico.values()) for dico in characters_liste_de_dico]
-
-
-#transforme en une liste de chaque nom dans une liste
-liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
-
-
-#transforme en un dico de chaque nom dans une liste
-dico_chaque_nom = [{liste[1]} for liste in listes_de_liste_characters]
-
-resultats = []
-
-for i in range (10):
-     for i in range(140) :
-         resultats = partie(liste_nom[i])
-print (resultats)
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
 
