@@ -4,9 +4,12 @@ Projet Flappy Bird
 On fait jouer automatiquement dix fois 
 chaque personnage d'Harry Potter au jeu suivant :
 Flappy Bird
-A chaque obstacle, la zone de passage est choisie aléatoirement entre 3 zones
-L'oiseau tente un passage aléatoire en volant au niveau d'une de ces 3 zones
-Si cela concorde, l'oiseau passe et le jeu continu sinon le jeu s'arrête 
+A chaque obstacle, la zone de passage est choisie aléatoirement 
+entre 3 zones
+L'oiseau tente un passage aléatoire en volant au niveau d'une
+de ces 3 zones
+Si cela concorde, l'oiseau passe et le jeu continu sinon le jeu
+s'arrête 
 50pts si 4 obstacles franchis (score max)
 Sinon 3 pts par obstacle franchi
 L'oiseau peut passer au max 4 obstacles
@@ -20,10 +23,10 @@ Paul Di Prizio
 Odon Prouille
 
 Version :
-
+Finale
 
 Date de dernière révision :
-
+17/11/2023
 
 Adresse Github: 
 https://github.com/Cypri3n/FlappyBird-NSI/tree/main
@@ -38,20 +41,15 @@ import pygame
 from pygame import mixer
 
 
-
 #définition des constantes
 
-oiseau = 0 
-
-obstacle = 0
-
-pts = 0 
-
-nbre_obstacle = 0 
-
-
+#définition des variables 
+resultats = []
+liste_scores = []
+liste_scores_finaux = []
 
 #définitionn des fonctions dans l'ordre d'utlilisation
+
 
 def partie(x):
     '''
@@ -78,11 +76,83 @@ def partie(x):
     return x
 
 
+def rajouter_points():
+  '''
+  Rajoute les points pour chaque 
+  personnages
 
-#Début du programmme
+  Entrée : 
+  Sortie : 
+  '''
+  resultats = []
+  for i in range(len(dico_chaque_nom)) :
+      for _ in range (10):  
+          resultats = partie(liste_nom[i])
+      liste_scores.append(resultats)
+
+
+def moyenne(scores_ia):
+  '''
+  Fait la moyenne des scores
+  pour un scoring total
+
+  Entrée : 
+  Sortie : 
+  '''
+  somme = 0
+  for x in range(len(scores_ia)):
+      for i in range (1, len(scores_ia[x])):
+          somme += scores_ia[x][i]       
+          if i == len(scores_ia[x])-1:
+              somme = somme / (len(scores_ia[x]) - 1)
+              liste_scores_finaux.append([scores_ia[x][0]])
+              liste_scores_finaux[x].append(somme)
+              somme = 0
+
+
+def tri(scores_ia):
+  '''
+  Tri la liste en ordre croissant
+
+  Entrée : Une liste 
+  Sortie : 
+  '''
+  for x in range(1, len(scores_ia)):
+      while x > 0 and scores_ia[x][1] > scores_ia[x - 1][1]:
+          scores_ia[x], scores_ia[x - 1] = scores_ia[x - 1], scores_ia[x]
+          x -= 1
+
+
+
+def classement():
+  '''
+  Classe les scores des joueurs
+
+  Entrée : 
+  Sortie : 
+  '''
+  rajouter_points()
+  moyenne(liste_scores)
+  tri(liste_scores_finaux)
+
+
+
+def reset_classement():
+  '''
+  Réinitialise le classement
+
+  Entrée : 
+  Sortie :
+  '''
+  global resultats, liste_scores, liste_scores_finaux, liste_nom
+  resultats = []
+  liste_scores = []
+  liste_scores_finaux = []
+  liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
+
+#DEBUT DU PROGRAMME PRINCIPAL
 
 #ouvre le csv et le transforme en liste contenant des dicos
-
 characters_liste_de_dico = []
 
 with open("Characters.csv", mode='r', encoding='utf-8') as f:
@@ -99,6 +169,7 @@ with open("Characters.csv", mode='r', encoding='utf-8') as f:
         for z in range (23):
             dico.pop
 
+
 #transforme en liste de liste de toutes les caractéristiques
 listes_de_liste_characters = [list(dico.values()) for dico in characters_liste_de_dico]
 
@@ -111,76 +182,12 @@ liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
 dico_chaque_nom = [{liste[1]} for liste in listes_de_liste_characters]
 
 
-#rajoute les points pour chaque personnages
-
-resultats = []
-liste_scores = []
-
-def rajouter_points():
-    resultats = []
-    for i in range(len(dico_chaque_nom)) :
-        for _ in range (10):  
-            resultats = partie(liste_nom[i])
-        liste_scores.append(resultats)
-
-# moyenne des scores pour un score total
-
-liste_scores_moyen = []
-
-def moyenne(scores_ia):
-    somme = 0
-    for x in range(len(scores_ia)):
-        for i in range (1, len(scores_ia[x])):
-            somme += scores_ia[x][i]       
-            if i == len(scores_ia[x])-1:
-                somme = somme / (len(scores_ia[x]) - 1)
-                liste_scores_moyen.append([scores_ia[x][0]])
-                liste_scores_moyen[x].append(somme)
-                somme = 0
-
-# tri de la liste en ordre décroissant
-
-def tri(scores_ia):
-    for x in range(1, len(scores_ia)):
-        while x > 0 and scores_ia[x][1] > scores_ia[x - 1][1]:
-            scores_ia[x], scores_ia[x - 1] = scores_ia[x - 1], scores_ia[x]
-            x -= 1
-
-def classement():
-    rajouter_points()
-    moyenne(liste_scores)
-    tri(liste_scores_moyen)
-
-def reset_classement():
-    global resultats, liste_scores, liste_scores_moyen, liste_nom
-    resultats = []
-    liste_scores = []
-    liste_scores_moyen = []
-    liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
-
-
-
-# Début de la boucle externe
-
-# Fin du programme
-
-
-#affichage de la moyenne des résultats pour chaque personnages par ordre décroissant
-
-
-
-
 
 """
 
 PYGAME
 
 """
-
-
-
-
-
 
 
 
@@ -215,6 +222,7 @@ gm_img = pygame.image.load("sprites/gameover.png").convert_alpha()
 def number_png(index):
     return pygame.image.load(f"sprites/{index}.png").convert_alpha()
 
+
 # affectation des variables de jeu
 
 ground_scroll = 0
@@ -227,6 +235,7 @@ last_pipe = pygame.time.get_ticks() - pipe_frequency
 pass_pipe = False
 game_score = 0
 number = 0
+
 
 # création des différentes classes 
 
@@ -379,7 +388,6 @@ while run:
     # vérifier les collisions
     if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top < 0:
         game_over = True
-        #hit_Sound.play()
 
     # check si l'oiseau touche le sol
 
@@ -422,8 +430,8 @@ while run:
 
             classement()
 
-            for i in range(len(liste_scores_moyen)):
-                print(f"Place : {i+1}    Nom : {liste_scores_moyen[i][0]} ; Score : {liste_scores_moyen[i][1]}")
+            for i in range(len(liste_scores_finaux)):
+                print(f"Place : {i+1}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
 
 
             reset_classement()
