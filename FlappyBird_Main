@@ -54,8 +54,8 @@ def partie(x):
   '''
     Joue la partie et implémente le score au personnage qui a joué
 
-    Entrée : une liste
-    Sortie : une liste
+    Entrée : une liste (le nom d'un joueur)
+    Sortie : une liste (le nom d'un joueur et son résultat après avoir joué au jeu)
     '''
   oiseau = 0
   obstacle = 0
