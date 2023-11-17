@@ -77,10 +77,10 @@ obstacle = 0
 
 
 
-
 #Début du programmme
 
 #ouvre le csv et le transforme en liste contenant des dicos
+
 characters_liste_de_dico = []
 
 with open("Characters.csv", mode='r', encoding='utf-8') as f:
@@ -101,7 +101,6 @@ with open("Characters.csv", mode='r', encoding='utf-8') as f:
 listes_de_liste_characters = [list(dico.values()) for dico in characters_liste_de_dico]
 
 
-
 #transforme en une liste de chaque nom dans une liste
 liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
 
@@ -110,25 +109,24 @@ liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
 dico_chaque_nom = [{liste[1]} for liste in listes_de_liste_characters]
 
 
+#rajoute les points pour chaque personnages
 
 resultats = []
 liste_scores = []
-
-
      
 for i in range(len(dico_chaque_nom)) :
     for _ in range (10):  
         resultats = partie(liste_nom[i])
     liste_scores.append(resultats)
 
-#print(liste_scores)
 
+
+# moyenne des scores pour un score total
 
 somme = 0
 
 liste_scores_finaux = []
 
-# somme des scores pour un score total
 
 for x in range(len(liste_scores)):
     for i in range (1, len(liste_scores[x])):
@@ -150,6 +148,7 @@ for x in range (1, len(liste_scores_finaux)):
 #classement par ordre décroissant
 liste_scores_finaux.reverse()
 
+#affichage de la moyenne des résultats pour chaque personnages par ordre décroissant
 print(liste_scores_finaux)
 
 
