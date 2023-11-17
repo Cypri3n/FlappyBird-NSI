@@ -125,7 +125,7 @@ def rajouter_points():
 
 # moyenne des scores pour un score total
 
-liste_scores_finaux = []
+liste_scores_moyen = []
 
 def moyenne(scores_ia):
     somme = 0
@@ -134,8 +134,8 @@ def moyenne(scores_ia):
             somme += scores_ia[x][i]       
             if i == len(scores_ia[x])-1:
                 somme = somme / (len(scores_ia[x]) - 1)
-                liste_scores_finaux.append([scores_ia[x][0]])
-                liste_scores_finaux[x].append(somme)
+                liste_scores_moyen.append([scores_ia[x][0]])
+                liste_scores_moyen[x].append(somme)
                 somme = 0
 
 # tri de la liste en ordre décroissant
@@ -149,13 +149,13 @@ def tri(scores_ia):
 def classement():
     rajouter_points()
     moyenne(liste_scores)
-    tri(liste_scores_finaux)
+    tri(liste_scores_moyen)
 
 def reset_classement():
-    global resultats, liste_scores, liste_scores_finaux, liste_nom
+    global resultats, liste_scores, liste_scores_moyen, liste_nom
     resultats = []
     liste_scores = []
-    liste_scores_finaux = []
+    liste_scores_moyen = []
     liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
 
 
@@ -215,7 +215,6 @@ gm_img = pygame.image.load("sprites/gameover.png").convert_alpha()
 def number_png(index):
     return pygame.image.load(f"sprites/{index}.png").convert_alpha()
 
-
 # affectation des variables de jeu
 
 ground_scroll = 0
@@ -228,8 +227,6 @@ last_pipe = pygame.time.get_ticks() - pipe_frequency
 pass_pipe = False
 game_score = 0
 number = 0
-print_score = False
-place_joueur = 0
 
 # création des différentes classes 
 
@@ -382,6 +379,7 @@ while run:
     # vérifier les collisions
     if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top < 0:
         game_over = True
+        #hit_Sound.play()
 
     # check si l'oiseau touche le sol
 
@@ -424,8 +422,8 @@ while run:
 
             classement()
 
-            for i in range(len(liste_scores_finaux)):
-                print(f"Place : {i+1}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
+            for i in range(len(liste_scores_moyen)):
+                print(f"Place : {i+1}    Nom : {liste_scores_moyen[i][0]} ; Score : {liste_scores_moyen[i][1]}")
 
 
             reset_classement()
