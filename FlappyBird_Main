@@ -75,7 +75,10 @@ def partie(x):
 oiseau = 0
 obstacle = 0
 
-# programme de tri
+
+
+
+#Début du programmme
 
 #ouvre le csv et le transforme en liste contenant des dicos
 characters_liste_de_dico = []
@@ -96,8 +99,6 @@ with open("Characters.csv", mode='r', encoding='utf-8') as f:
 
 #transforme en liste de liste de toutes les caractéristiques
 listes_de_liste_characters = [list(dico.values()) for dico in characters_liste_de_dico]
-
-
 
 
 
