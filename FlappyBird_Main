@@ -54,10 +54,10 @@ nbre_obstacle = 0
 
 def partie(x):
     '''
-    Joue la partie et implémente le score # A REVOIR
+    Joue la partie et implémente le score au personnage qui a joué
 
-    Entrée : un dico
-    Sortie : un dico
+    Entrée : une liste
+    Sortie : une liste
     '''
     oiseau = 0 
     obstacle = 0
