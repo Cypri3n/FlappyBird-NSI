@@ -32,12 +32,14 @@ https://github.com/Cypri3n/FlappyBird-NSI/tree/main
 # coding: utf-8
 
 #import des modules
+
 from random import randint
 import pygame
 
 
 
 #définition des constantes
+
 oiseau = 0 
 
 obstacle = 0
@@ -45,6 +47,7 @@ obstacle = 0
 pts = 0 
 
 nbre_obstacle = 0 
+
 
 
 #définitionn des fonctions dans l'ordre d'utlilisation
