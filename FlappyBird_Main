@@ -75,13 +75,18 @@ def partie(x):
 
 
 def reset_game():
-  # Remettez ici toutes vos variables à leurs valeurs initiales
+  
   global game_over, flying, game_score, ground_scroll, pass_pipe
   game_over = False
   flying = False
   game_score = 0
   ground_scroll = 0
   pass_pipe = False
+  resultats = []  # Réinitialisez les résultats à une liste vide
+  liste_scores = []  # Réinitialisez les listes de scores à une liste vide
+  liste_scores_finaux = []
+
+
 
 #Début du programmme
 
@@ -473,3 +478,5 @@ while run:
 
   pygame.display.flip()
   pygame.display.update()
+
+pygame.quit()
