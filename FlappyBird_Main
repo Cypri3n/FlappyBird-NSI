@@ -1,37 +1,52 @@
 '''
-Projet Flappy Bird 
+FLAPPY BIRD
 
-On fait jouer automatiquement dix fois 
-chaque personnage d'Harry Potter au jeu suivant :
-Flappy Bird
-A chaque obstacle, la zone de passage est choisie aléatoirement 
-entre 3 zones
-L'oiseau tente un passage aléatoire en volant au niveau d'une
-de ces 3 zones
-Si cela concorde, l'oiseau passe et le jeu continu sinon le jeu
-s'arrête 
+
+REGLES:
+A chaque obstacle, la zone de passage est choisie aléatoirement entre 3 zones
+L'oiseau tente un passage aléatoire en volant au niveau d'une de ces 3 zones
+Si cela concorde, l'oiseau passe et le jeu continue sinon le jeu s'arrête
 50pts si 4 obstacles franchis (score max)
 Sinon 3 pts par obstacle franchi
-L'oiseau peut passer au max 4 obstacles
-On fait une moyenne des 10 résultats pour chaque personnage 
-qu'on affiche dans l'ordre décroissant
+L'oiseau peut passer au maximum 4 obstacles en une partie
 
 
-Auteurs :
+CLASSEMENT ET CSV:
+Ce classement est composé des moyennes des 10 scores de chaque personnage 
+de l'univers de Harry Potter, importés du fichier CSV,
+qu'on affiche dans l'ordre décroissant.
+
+
+BONUS:
+Le jeu possède également une interface graphique dont le code commence à la ligne 177
+Notre version du Flappy bird est jouable et les classements sont générés à l'appui du 
+bouton en bas a gauche du menu de fin de partie. 
+
+
+
+AUTEURS:
 Cyprien Venard
 Paul Di Prizio
 Odon Prouille
 
-Version :
+
+LICENCE:
+Aucune
+
+
+VERSION:
 Finale
 
-Date de dernière révision :
+
+DATE DE DERNIERE REVISION:
 17/11/2023
 
-Adresse Github: 
+
+ADRESSE GITHUB: 
 https://github.com/Cypri3n/FlappyBird-NSI/tree/main
 
 '''
+
 # coding: utf-8
 
 #import des modules
@@ -81,8 +96,6 @@ def rajouter_points():
   Rajoute les points pour chaque 
   personnages
 
-  Entrée : 
-  Sortie : 
   '''
   resultats = []
   for i in range(len(dico_chaque_nom)) :
@@ -95,9 +108,7 @@ def moyenne(scores_ia):
   '''
   Fait la moyenne des scores
   pour un scoring total
-
-  Entrée : 
-  Sortie : 
+ 
   '''
   somme = 0
   for x in range(len(scores_ia)):
@@ -113,9 +124,7 @@ def moyenne(scores_ia):
 def tri(scores_ia):
   '''
   Tri la liste en ordre croissant
-
-  Entrée : Une liste 
-  Sortie : 
+ 
   '''
   for x in range(1, len(scores_ia)):
       while x > 0 and scores_ia[x][1] > scores_ia[x - 1][1]:
@@ -128,8 +137,6 @@ def classement():
   '''
   Classe les scores des joueurs
 
-  Entrée : 
-  Sortie : 
   '''
   rajouter_points()
   moyenne(liste_scores)
@@ -141,14 +148,15 @@ def reset_classement():
   '''
   Réinitialise le classement
 
-  Entrée : 
-  Sortie :
   '''
   global resultats, liste_scores, liste_scores_finaux, liste_nom
   resultats = []
   liste_scores = []
   liste_scores_finaux = []
   liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
+
+
+
 
 #DEBUT DU PROGRAMME PRINCIPAL
 
@@ -180,6 +188,7 @@ liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
 
 #transforme en un dico de chaque nom dans une liste
 dico_chaque_nom = [{liste[1]} for liste in listes_de_liste_characters]
+
 
 
 
