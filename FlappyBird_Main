@@ -425,16 +425,8 @@ while run:
             classement()
 
             for i in range(len(liste_scores_finaux)):
-                if game_score >= liste_scores_finaux[i][1]:
-                    if print_score == False:
-                        place_joueur = i+1
-                        print(f"Place : {i+1}    Nom : Joueur ; Score : {game_score}")
-                        print_score = True
-                    print(f"Place : {i+2}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
-                else:
-                    print(f"Place : {i+1}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
-                if i == len(liste_scores_finaux) - 1:
-                    print(f"Vous êtes arrivé {place_joueur}ème/er")
+                print(f"Place : {i+1}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
+
 
             reset_classement()
 
