@@ -435,6 +435,11 @@ while run:
         if leaderboard == True:
             screen.fill((0,0,0))
 
+        # Format the users
+        leaderboard = map(lambda liste_scores_finaux: liste_scores_finaux[0] + "| " + str(liste_scores_finaux[1]), users)
+        # Output
+        print("\n".join(leaderboard))
+
             for i in range(len(liste_scores_finaux)):
                 Y += 20
                 if Y > 1024:
