@@ -22,6 +22,9 @@ Cyprien Venard
 Paul Di Prizio
 Odon Prouille
 
+Licence :
+Aucune
+
 Version :
 Finale
 
@@ -32,6 +35,7 @@ Adresse Github:
 https://github.com/Cypri3n/FlappyBird-NSI/tree/main
 
 '''
+
 # coding: utf-8
 
 #import des modules
@@ -81,8 +85,6 @@ def rajouter_points():
   Rajoute les points pour chaque 
   personnages
 
-  Entrée : 
-  Sortie : 
   '''
   resultats = []
   for i in range(len(dico_chaque_nom)) :
@@ -95,9 +97,7 @@ def moyenne(scores_ia):
   '''
   Fait la moyenne des scores
   pour un scoring total
-
-  Entrée : 
-  Sortie : 
+ 
   '''
   somme = 0
   for x in range(len(scores_ia)):
@@ -113,9 +113,7 @@ def moyenne(scores_ia):
 def tri(scores_ia):
   '''
   Tri la liste en ordre croissant
-
-  Entrée : Une liste 
-  Sortie : 
+ 
   '''
   for x in range(1, len(scores_ia)):
       while x > 0 and scores_ia[x][1] > scores_ia[x - 1][1]:
@@ -128,8 +126,6 @@ def classement():
   '''
   Classe les scores des joueurs
 
-  Entrée : 
-  Sortie : 
   '''
   rajouter_points()
   moyenne(liste_scores)
@@ -141,14 +137,15 @@ def reset_classement():
   '''
   Réinitialise le classement
 
-  Entrée : 
-  Sortie :
   '''
   global resultats, liste_scores, liste_scores_finaux, liste_nom
   resultats = []
   liste_scores = []
   liste_scores_finaux = []
   liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
+
+
+
 
 #DEBUT DU PROGRAMME PRINCIPAL
 
@@ -180,6 +177,7 @@ liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
 
 #transforme en un dico de chaque nom dans une liste
 dico_chaque_nom = [{liste[1]} for liste in listes_de_liste_characters]
+
 
 
 
