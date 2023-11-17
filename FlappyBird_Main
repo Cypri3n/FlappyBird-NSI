@@ -64,8 +64,8 @@ def partie(x):
     obstacle = 0
     pts = 0
     nbre_obstacle = 0
-    
-    
+
+
     while nbre_obstacle < 4 and oiseau == obstacle:
         oiseau = randint(1,3)
         obstacle = randint(1,3)
@@ -117,6 +117,7 @@ resultats = []
 liste_scores = []
 
 def rajouter_points():
+    resultats = []
     for i in range(len(dico_chaque_nom)) :
         for _ in range (10):  
             resultats = partie(liste_nom[i])
@@ -151,29 +152,15 @@ def classement():
     tri(liste_scores_finaux)
 
 def reset_classement():
-    global resultats, liste_scores, liste_scores_finaux
+    global resultats, liste_scores, liste_scores_finaux, liste_nom
     resultats = []
     liste_scores = []
     liste_scores_finaux = []
+    liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
+
+
 
 # Début de la boucle externe
-for _ in range(10):  # Jouer automatiquement dix fois chaque personnage
-    # réinitialise les résultats
-    reset_classement()
-    
-    # Jouer le jeu automatiquement pour chaque personnage
-    rajouter_points()
-
-    # Calculer la moyenne et trier le classement
-    moyenne(liste_scores)
-    tri(liste_scores_finaux)
-
-    # Afficher les résultats pour chaque personnage
-    for i in range(len(liste_scores_finaux)):
-        print(f"Personnage: {liste_scores_finaux[i][0]}, Moyenne: {liste_scores_finaux[i][1]}")
-
-    # Afficher une ligne vide pour séparer les résultats des différentes itérations
-    print()
 
 # Fin du programme
 
@@ -271,7 +258,7 @@ class Bird(pygame.sprite.Sprite):
         self.clicked = False
 
     def update(self):
-        
+
         # gravité
         if flying == True:
             self.velocity += 0.5
@@ -397,7 +384,7 @@ while run:
         game_over = True
 
     # check si l'oiseau touche le sol
-    
+
     if flappy.rect.bottom >= 1024/2:
         game_over = True
         flying = False
@@ -406,7 +393,7 @@ while run:
 
     number = list(str(game_score))
     for img in range(len(number)):
-        
+
         screen.blit(number_png(number[img]),(img * 24,0))
 
     if game_over == False and flying == True:
@@ -420,7 +407,7 @@ while run:
             top_pipe = Pipe(screen_widht,int(screen_height/2) + pipe_height, 1)
             pipe_group.add(btm_pipe, top_pipe)
             last_pipe = time_now
-            
+
 
         ground_scroll -= scroll_speed
 
@@ -432,7 +419,7 @@ while run:
     # check pour un game over et reset
     if game_over == True:
         screen.blit(gm_img,(screen_widht / 2 - 192/2, 125))
-    
+
         if ranking_button.draw() == True:
 
             classement()
@@ -470,4 +457,3 @@ while run:
     pygame.display.update()
 
 pygame.quit()
-
