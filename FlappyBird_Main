@@ -35,6 +35,7 @@ https://github.com/Cypri3n/FlappyBird-NSI/tree/main
 
 from random import randint
 import pygame
+from pygame import mixer
 
 
 
@@ -75,8 +76,6 @@ def partie(x):
             pts = 50
     x.append(pts)
     return x
-oiseau = 0
-obstacle = 0
 
 
 
@@ -116,41 +115,71 @@ dico_chaque_nom = [{liste[1]} for liste in listes_de_liste_characters]
 
 resultats = []
 liste_scores = []
-     
-for i in range(len(dico_chaque_nom)) :
-    for _ in range (10):  
-        resultats = partie(liste_nom[i])
-    liste_scores.append(resultats)
 
-
+def rajouter_points():
+    for i in range(len(dico_chaque_nom)) :
+        for _ in range (10):  
+            resultats = partie(liste_nom[i])
+        liste_scores.append(resultats)
 
 # moyenne des scores pour un score total
 
-somme = 0
-
 liste_scores_finaux = []
 
-
-for x in range(len(liste_scores)):
-    for i in range (1, len(liste_scores[x])):
-        somme += liste_scores[x][i]       
-        if i == len(liste_scores[x])-1:
-            somme = somme / (len(liste_scores[x]) - 1)
-            liste_scores_finaux.append([liste_scores[x][0]])
-            liste_scores_finaux[x].append(somme)
-            somme = 0
-
+def moyenne(scores_ia):
+    somme = 0
+    for x in range(len(scores_ia)):
+        for i in range (1, len(scores_ia[x])):
+            somme += scores_ia[x][i]       
+            if i == len(scores_ia[x])-1:
+                somme = somme / (len(scores_ia[x]) - 1)
+                liste_scores_finaux.append([scores_ia[x][0]])
+                liste_scores_finaux[x].append(somme)
+                somme = 0
 
 # tri de la liste en ordre décroissant
 
-for x in range(1, len(liste_scores_finaux)):
-    while x > 0 and liste_scores_finaux[x][1] > liste_scores_finaux[x - 1][1]:
-        liste_scores_finaux[x], liste_scores_finaux[x - 1] = liste_scores_finaux[x - 1], liste_scores_finaux[x]
-        x -= 1
+def tri(scores_ia):
+    for x in range(1, len(scores_ia)):
+        while x > 0 and scores_ia[x][1] > scores_ia[x - 1][1]:
+            scores_ia[x], scores_ia[x - 1] = scores_ia[x - 1], scores_ia[x]
+            x -= 1
+
+def classement():
+    rajouter_points()
+    moyenne(liste_scores)
+    tri(liste_scores_finaux)
+
+def reset_classement():
+    global resultats, liste_scores, liste_scores_finaux
+    resultats = []
+    liste_scores = []
+    liste_scores_finaux = []
+
+# Début de la boucle externe
+for _ in range(10):  # Jouer automatiquement dix fois chaque personnage
+    # réinitialise les résultats
+    reset_classement()
+    
+    # Jouer le jeu automatiquement pour chaque personnage
+    rajouter_points()
+
+    # Calculer la moyenne et trier le classement
+    moyenne(liste_scores)
+    tri(liste_scores_finaux)
+
+    # Afficher les résultats pour chaque personnage
+    for i in range(len(liste_scores_finaux)):
+        print(f"Personnage: {liste_scores_finaux[i][0]}, Moyenne: {liste_scores_finaux[i][1]}")
+
+    # Afficher une ligne vide pour séparer les résultats des différentes itérations
+    print()
+
+# Fin du programme
 
 
 #affichage de la moyenne des résultats pour chaque personnages par ordre décroissant
-print(liste_scores_finaux)
+
 
 
 
@@ -170,9 +199,6 @@ PYGAME
 
 #Début du programme principal
 
-from pygame.locals import QUIT, VIDEORESIZE, HWSURFACE, DOUBLEBUF, RESIZABLE
-#from pygame.sprite import _Group
-
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -184,7 +210,7 @@ screen_widht = 576/2
 screen_height = 1248/2
 
 # changer les valeurs de l'écran par des variables de préférence
-screen = pygame.display.set_mode((screen_widht, screen_height), HWSURFACE | DOUBLEBUF | RESIZABLE)
+screen = pygame.display.set_mode((screen_widht, screen_height))
 pygame.display.set_caption("Flappy Bird")
 
 # Images
@@ -203,18 +229,6 @@ def number_png(index):
     return pygame.image.load(f"sprites/{index}.png").convert_alpha()
 
 
-"""
-# Fonction pour ajuster la taille du fond
-def resize_window(new_size):
-
-    global screen, bg_day#,img
-    screen = pygame.display.set_mode(new_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
-    #screen.blit(pygame.transform.scale(img, new_size), (0, 0))
-    screen.blit(pygame.transform.scale(bg_day, new_size), (0, 0))
-    pygame.display.flip()
-
-"""
-
 # affectation des variables de jeu
 
 ground_scroll = 0
@@ -227,21 +241,17 @@ last_pipe = pygame.time.get_ticks() - pipe_frequency
 pass_pipe = False
 game_score = 0
 number = 0
+print_score = False
+place_joueur = 0
 
 # création des différentes classes 
-
-""" 
-Si vous voulez savoir ce qu'est la classe Sprite, c'est pas forcément nécéssaire
-mais je pose ça là, sachant qu'il faut déjà savoir ce qu'est une classe avant d'aller voir là bas
-https://fr.wikibooks.org/wiki/Pygame/Introduction_au_module_Sprite
-"""
-
 
 def reset_game():
     pipe_group.empty()
     flappy.rect.x = 50
     flappy.rect.y = int(screen_height / 2)
     game_score = 0
+    print_score = False
     return game_score
 
 class Bird(pygame.sprite.Sprite):
@@ -425,18 +435,29 @@ while run:
     
         if ranking_button.draw() == True:
 
+            classement()
+
             for i in range(len(liste_scores_finaux)):
-                print(f"Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
-             
+                if game_score >= liste_scores_finaux[i][1]:
+                    if print_score == False:
+                        place_joueur = i+1
+                        print(f"Place : {i+1}    Nom : Joueur ; Score : {game_score}")
+                        print_score = True
+                    print(f"Place : {i+2}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
+                else:
+                    print(f"Place : {i+1}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
+                if i == len(liste_scores_finaux) - 1:
+                    print(f"Vous êtes arrivé {place_joueur}ème/er")
+
+            reset_classement()
+
         if restart_button.draw() == True:
             game_over = False
-            leaderboard = False
-            score = reset_game()
-            print(score)
+            game_score = reset_game()
 
 
     for event in pygame.event.get():
-        if event.type == QUIT:
+        if event.type == pygame.QUIT:
             run = False
         if event.type == pygame.MOUSEBUTTONDOWN and flying == False and game_over == False:
             flying = True
