@@ -8,7 +8,7 @@ A chaque obstacle, la zone de passage est choisie aléatoirement entre 3 zones
 L'oiseau tente un passage aléatoire en volant au niveau d'une de ces 3 zones
 Si cela concorde, l'oiseau passe et le jeu continu sinon le jeu s'arrête 
 50pts si 4 obstacles franchis (score max)
-Sinon 4 pts par obstacle franchi
+Sinon 3 pts par obstacle franchi
 L'oiseau peut passer au max 4 obstacles
 On fait une moyenne des 10 résultats pour chaque personnage 
 qu'on affiche dans l'ordre croissant
