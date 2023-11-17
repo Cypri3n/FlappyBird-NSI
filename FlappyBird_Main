@@ -37,46 +37,41 @@ from random import randint
 import pygame
 from pygame import mixer
 
-
-
 #définition des constantes
 
-oiseau = 0 
+oiseau = 0
 
 obstacle = 0
 
-pts = 0 
+pts = 0
 
-nbre_obstacle = 0 
-
-
+nbre_obstacle = 0
 
 #définitionn des fonctions dans l'ordre d'utlilisation
 
+
 def partie(x):
-    '''
+  '''
     Joue la partie et implémente le score au personnage qui a joué
 
     Entrée : une liste
     Sortie : une liste
     '''
-    oiseau = 0 
-    obstacle = 0
-    pts = 0
-    nbre_obstacle = 0
+  oiseau = 0
+  obstacle = 0
+  pts = 0
+  nbre_obstacle = 0
 
-
-    while nbre_obstacle < 4 and oiseau == obstacle:
-        oiseau = randint(1,3)
-        obstacle = randint(1,3)
-        if oiseau == obstacle :
-            pts += 3 
-            nbre_obstacle +=1 
-        if nbre_obstacle == 4:
-            pts = 50
-    x.append(pts)
-    return x
-
+  while nbre_obstacle < 4 and oiseau == obstacle:
+    oiseau = randint(1, 3)
+    obstacle = randint(1, 3)
+    if oiseau == obstacle:
+      pts += 3
+      nbre_obstacle += 1
+    if nbre_obstacle == 4:
+      pts = 50
+  x.append(pts)
+  return x
 
 
 #Début du programmme
@@ -86,99 +81,93 @@ def partie(x):
 characters_liste_de_dico = []
 
 with open("Characters.csv", mode='r', encoding='utf-8') as f:
-    lignes = f.readlines()
-    cles_de_ligne = lignes[0].strip()
-    keys = cles_de_ligne.split(";")
-    for line in lignes[1:]:
-        line = line.strip()
-        valeurs = line.split(';')
-        dico = {}
-        for i in range(len(keys)):
-            dico[keys[i]] = valeurs[i]
-        characters_liste_de_dico.append(dico)
-        for z in range (23):
-            dico.pop
+  lignes = f.readlines()
+  cles_de_ligne = lignes[0].strip()
+  keys = cles_de_ligne.split(";")
+  for line in lignes[1:]:
+    line = line.strip()
+    valeurs = line.split(';')
+    dico = {}
+    for i in range(len(keys)):
+      dico[keys[i]] = valeurs[i]
+    characters_liste_de_dico.append(dico)
+    for z in range(23):
+      dico.pop
 
 #transforme en liste de liste de toutes les caractéristiques
-listes_de_liste_characters = [list(dico.values()) for dico in characters_liste_de_dico]
-
+listes_de_liste_characters = [
+    list(dico.values()) for dico in characters_liste_de_dico
+]
 
 #transforme en une liste de chaque nom dans une liste
 liste_nom = [[liste[1]] for liste in listes_de_liste_characters]
 
-
 #transforme en un dico de chaque nom dans une liste
 dico_chaque_nom = [{liste[1]} for liste in listes_de_liste_characters]
-
 
 #rajoute les points pour chaque personnages
 
 resultats = []
 liste_scores = []
 
+
 def rajouter_points():
-    for i in range(len(dico_chaque_nom)) :
-        for _ in range (10):  
-            resultats = partie(liste_nom[i])
-        liste_scores.append(resultats)
+  for i in range(len(dico_chaque_nom)):
+    for _ in range(10):
+      resultats = partie(liste_nom[i])
+    liste_scores.append(resultats)
+
 
 # moyenne des scores pour un score total
 
 liste_scores_finaux = []
 
+
 def moyenne(scores_ia):
-    somme = 0
-    for x in range(len(scores_ia)):
-        for i in range (1, len(scores_ia[x])):
-            somme += scores_ia[x][i]       
-            if i == len(scores_ia[x])-1:
-                somme = somme / (len(scores_ia[x]) - 1)
-                liste_scores_finaux.append([scores_ia[x][0]])
-                liste_scores_finaux[x].append(somme)
-                somme = 0
+  somme = 0
+  for x in range(len(scores_ia)):
+    for i in range(1, len(scores_ia[x])):
+      somme += scores_ia[x][i]
+      if i == len(scores_ia[x]) - 1:
+        somme = somme / (len(scores_ia[x]) - 1)
+        liste_scores_finaux.append([scores_ia[x][0]])
+        liste_scores_finaux[x].append(somme)
+        somme = 0
+
 
 # tri de la liste en ordre décroissant
 
+
 def tri(scores_ia):
-    for x in range(1, len(scores_ia)):
-        while x > 0 and scores_ia[x][1] > scores_ia[x - 1][1]:
-            scores_ia[x], scores_ia[x - 1] = scores_ia[x - 1], scores_ia[x]
-            x -= 1
+  for x in range(1, len(scores_ia)):
+    while x > 0 and scores_ia[x][1] > scores_ia[x - 1][1]:
+      scores_ia[x], scores_ia[x - 1] = scores_ia[x - 1], scores_ia[x]
+      x -= 1
+
 
 def classement():
-    rajouter_points()
-    moyenne(liste_scores)
-    tri(liste_scores_finaux)
+  rajouter_points()
+  moyenne(liste_scores)
+  tri(liste_scores_finaux)
+
 
 def reset_classement():
-    global resultats, liste_scores, liste_scores_finaux
-    resultats = []
-    liste_scores = []
-    liste_scores_finaux = []
+  global resultats, liste_scores, liste_scores_finaux
+  resultats = []
+  liste_scores = []
+  liste_scores_finaux = []
+
 
 # Début de la boucle externe
 
 # Fin du programme
 
-
 #affichage de la moyenne des résultats pour chaque personnages par ordre décroissant
-
-
-
-
-
 """
 
 PYGAME
 
 """
-
-
-
-
-
-
-
 
 #Début du programme principal
 
@@ -189,8 +178,8 @@ fps = 60
 
 # Configurer l'écran
 
-screen_widht = 576/2
-screen_height = 1248/2
+screen_widht = 576 / 2
+screen_height = 1248 / 2
 
 # changer les valeurs de l'écran par des variables de préférence
 screen = pygame.display.set_mode((screen_widht, screen_height))
@@ -208,8 +197,9 @@ restart = pygame.image.load("sprites/restart.png").convert()
 ranking = pygame.image.load("sprites/ranking.png").convert_alpha()
 gm_img = pygame.image.load("sprites/gameover.png").convert_alpha()
 
+
 def number_png(index):
-    return pygame.image.load(f"sprites/{index}.png").convert_alpha()
+  return pygame.image.load(f"sprites/{index}.png").convert_alpha()
 
 
 # affectation des variables de jeu
@@ -219,7 +209,7 @@ scroll_speed = 4
 flying = False
 game_over = False
 pipe_gap = 125
-pipe_frequency = 1000 # millisecondes
+pipe_frequency = 1000  # millisecondes
 last_pipe = pygame.time.get_ticks() - pipe_frequency
 pass_pipe = False
 game_score = 0
@@ -227,108 +217,118 @@ number = 0
 print_score = False
 place_joueur = 0
 
-# création des différentes classes 
+# création des différentes classes
+
 
 def reset_game():
-    pipe_group.empty()
-    flappy.rect.x = 50
-    flappy.rect.y = int(screen_height / 2)
-    game_score = 0
-    print_score = False
-    return game_score
+  pipe_group.empty()
+  flappy.rect.x = 50
+  flappy.rect.y = int(screen_height / 2)
+  game_score = 0
+  print_score = False
+  return game_score
+
 
 class Bird(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.images = []
-        self.index = 0
-        self.counter = 0
-        for num in range(1,4):
-            img = pygame.image.load(f"sprites/yellowbird-{num}.png").convert_alpha()
-            self.images.append(img)
-        # la redimension de l'image créer un rectangle noir autour de l'image donc je passe pour le moment
-        self.image = self.images[self.index]
-        self.rect = self.image.get_rect()
-        self.rect.center = [x, y]
-        self.velocity = 0
+
+  def __init__(self, x, y):
+    pygame.sprite.Sprite.__init__(self)
+    self.images = []
+    self.index = 0
+    self.counter = 0
+    for num in range(1, 4):
+      img = pygame.image.load(f"sprites/yellowbird-{num}.png").convert_alpha()
+      self.images.append(img)
+    # la redimension de l'image créer un rectangle noir autour de l'image donc je passe pour le moment
+    self.image = self.images[self.index]
+    self.rect = self.image.get_rect()
+    self.rect.center = [x, y]
+    self.velocity = 0
+    self.clicked = False
+
+  def update(self):
+
+    # gravité
+    if flying == True:
+      self.velocity += 0.5
+      if self.rect.bottom < 1024 / 2:
+        self.rect.y += int(self.velocity)
+      if self.velocity >= 8:
+        self.velocity = 8
+    if game_over == False:
+      # saut
+      if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+        self.clicked = True
+        self.velocity = -8
+      if not pygame.mouse.get_pressed()[0] == 1:
         self.clicked = False
+      #actualise l'animation
+      self.counter += 1
+      flap_cooldown = 5
+      if self.counter > flap_cooldown:
+        self.counter = 0
+        self.index += 1
+        if self.index >= len(self.images):
+          self.index = 0
 
-    def update(self):
+        self.image = self.images[self.index]
+      # tourner l'oiseau
+      self.image = pygame.transform.rotate(self.images[self.index],
+                                           -self.velocity * 2)
+    else:
+      self.image = pygame.transform.rotate(self.images[self.index], -90)
 
-        # gravité
-        if flying == True:
-            self.velocity += 0.5
-            if self.rect.bottom < 1024/2:
-                self.rect.y +=  int(self.velocity)
-            if self.velocity >= 8:
-                self.velocity = 8
-        if game_over == False:
-            # saut
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked = True
-                self.velocity = -8
-            if not pygame.mouse.get_pressed()[0] == 1 :
-                self.clicked = False
-            #actualise l'animation
-            self.counter += 1
-            flap_cooldown = 5
-            if self.counter > flap_cooldown:
-                self.counter = 0
-                self.index += 1
-                if self.index >= len(self.images):
-                    self.index = 0
-
-                self.image = self.images[self.index]
-            # tourner l'oiseau
-            self.image = pygame.transform.rotate(self.images[self.index],-self.velocity * 2)
-        else:
-            self.image = pygame.transform.rotate(self.images[self.index],-90)
 
 class Pipe(pygame.sprite.Sprite):
-    def __init__(self, x, y, position):
-        pygame.sprite.Sprite.__init__(self)    
-        self.image = pygame.image.load("sprites/pipe-green.png").convert_alpha()
-        self.rect = self.image.get_rect()
-        # position 1 pour le sprite haut position -1 pour le sprite bas
-        if position == 1:
-            self.image = pygame.transform.flip(self.image, False, True)
-            self.rect.bottomleft = [x,y - int(pipe_gap / 2)]
-        elif position == -1:
-            self.rect.topleft = [x,y + int(pipe_gap / 2)]
 
-    def update(self):
-        if game_over == False:
-            self.rect.x -= scroll_speed
-        if self.rect.right < 0:
-            self.kill()
+  def __init__(self, x, y, position):
+    pygame.sprite.Sprite.__init__(self)
+    self.image = pygame.image.load("sprites/pipe-green.png").convert_alpha()
+    self.rect = self.image.get_rect()
+    # position 1 pour le sprite haut position -1 pour le sprite bas
+    if position == 1:
+      self.image = pygame.transform.flip(self.image, False, True)
+      self.rect.bottomleft = [x, y - int(pipe_gap / 2)]
+    elif position == -1:
+      self.rect.topleft = [x, y + int(pipe_gap / 2)]
+
+  def update(self):
+    if game_over == False:
+      self.rect.x -= scroll_speed
+    if self.rect.right < 0:
+      self.kill()
+
 
 class Button():
-    def __init__(self, x, y, image):
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x,y)
 
-    def draw(self):
+  def __init__(self, x, y, image):
+    self.image = image
+    self.rect = self.image.get_rect()
+    self.rect.topleft = (x, y)
 
-        action = False
+  def draw(self):
 
-        # récupérer la position du curseur
-        pos = pygame.mouse.get_pos()
-        # vérifie si la souris passe sur le boutton
+    action = False
 
-        if self.rect.collidepoint(pos):
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    action = True
-        # affiche l'image
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+    # récupérer la position du curseur
+    pos = pygame.mouse.get_pos()
+    # vérifie si la souris passe sur le boutton
 
-        return action
+    if self.rect.collidepoint(pos):
+      for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+          action = True
+    # affiche l'image
+    screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    return action
+
 
 bird_group = pygame.sprite.Group()
 pipe_group = pygame.sprite.Group()
 
-restart_button = Button(screen_widht / 2 - 60, screen_height / 2 + 175, restart)
+restart_button = Button(screen_widht / 2 - 60, screen_height / 2 + 175,
+                        restart)
 ranking_button = Button(screen_widht - 60, screen_height - 37, ranking)
 
 flappy = Bird(50, int(screen_height / 2))
@@ -336,121 +336,119 @@ bird_group.add(flappy)
 
 # Boucle du jeu
 
-
 run = True
 
 while run:
 
+  # empeche la boucle de se répéter trop rapidement
+  clock.tick(fps)
 
+  # dessine l'arrière plan
+  screen.blit(bg_day, (0, 0))
 
+  if flying == False and game_over != True:
+    screen.blit(message, (50, 125))
 
-    # empeche la boucle de se répéter trop rapidement
-    clock.tick(fps)
+  # créer l'oiseau
+  bird_group.draw(screen)
+  bird_group.update()
 
-    # dessine l'arrière plan
-    screen.blit(bg_day,(0,0) )
+  pipe_group.draw(screen)
+  pipe_group.update()
 
-    if flying == False and game_over != True:
-        screen.blit(message,(50,125))
+  # dessine le sol
+  screen.blit(base, (ground_scroll, 1024 / 2))
 
-    # créer l'oiseau
-    bird_group.draw(screen)
-    bird_group.update()
+  # check le score
 
-    pipe_group.draw(screen)
-    pipe_group.update()
+  if len(pipe_group) > 0:
+    if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.left\
+        and bird_group.sprites()[0].rect.left < pipe_group.sprites()[0].rect.right\
+        and pass_pipe == False:
+      pass_pipe = True
+    if pass_pipe == True:
+      if bird_group.sprites()[0].rect.left > pipe_group.sprites(
+      )[0].rect.right:
+        pass_pipe = False
+        game_score += 1
 
-    # dessine le sol
-    screen.blit(base,(ground_scroll,1024/2) )
+  # vérifier les collisions
+  if pygame.sprite.groupcollide(bird_group, pipe_group, False,
+                                False) or flappy.rect.top < 0:
+    game_over = True
 
-    # check le score
+  # check si l'oiseau touche le sol
 
-    if len(pipe_group) > 0:
-        if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.left\
-            and bird_group.sprites()[0].rect.left < pipe_group.sprites()[0].rect.right\
-            and pass_pipe == False:
-            pass_pipe = True
-        if pass_pipe == True:
-            if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.right:
-                pass_pipe = False
-                game_score += 1
+  if flappy.rect.bottom >= 1024 / 2:
+    game_over = True
+    flying = False
 
-    # vérifier les collisions
-    if pygame.sprite.groupcollide(bird_group, pipe_group, False, False) or flappy.rect.top < 0:
-        game_over = True
+  # affichage du game_score
 
-    # check si l'oiseau touche le sol
+  number = list(str(game_score))
+  for img in range(len(number)):
 
-    if flappy.rect.bottom >= 1024/2:
-        game_over = True
-        flying = False
+    screen.blit(number_png(number[img]), (img * 24, 0))
 
-    # affichage du game_score
+  if game_over == False and flying == True:
 
-    number = list(str(game_score))
-    for img in range(len(number)):
+    # génère de nouveaux tuyaux
 
-        screen.blit(number_png(number[img]),(img * 24,0))
+    time_now = pygame.time.get_ticks()
+    if time_now - last_pipe > pipe_frequency:
+      pipe_height = randint(-52, 52)
+      btm_pipe = Pipe(screen_widht, int(screen_height / 2) + pipe_height, -1)
+      top_pipe = Pipe(screen_widht, int(screen_height / 2) + pipe_height, 1)
+      pipe_group.add(btm_pipe, top_pipe)
+      last_pipe = time_now
 
-    if game_over == False and flying == True:
+    ground_scroll -= scroll_speed
 
-        # génère de nouveaux tuyaux
+  if ground_scroll <= -48:
+    ground_scroll = 0
 
-        time_now = pygame.time.get_ticks()
-        if time_now - last_pipe > pipe_frequency:
-            pipe_height = randint(-52,52)
-            btm_pipe = Pipe(screen_widht,int(screen_height/2) + pipe_height, -1)
-            top_pipe = Pipe(screen_widht,int(screen_height/2) + pipe_height, 1)
-            pipe_group.add(btm_pipe, top_pipe)
-            last_pipe = time_now
+  # check pour un game over et reset
+  if game_over == True:
+    screen.blit(gm_img, (screen_widht / 2 - 192 / 2, 125))
 
+    if ranking_button.draw() == True:
 
-        ground_scroll -= scroll_speed
+      classement()
 
-    if ground_scroll <= -48:
-        ground_scroll = 0
+      for i in range(len(liste_scores_finaux)):
+        if game_score >= liste_scores_finaux[i][1]:
+          if print_score == False:
+            place_joueur = i + 1
+            print(f"Place : {i+1}    Nom : Joueur ; Score : {game_score}")
+            print_score = True
+          print(
+              f"Place : {i+2}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}"
+          )
+        else:
+          print(
+              f"Place : {i+1}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}"
+          )
+        if i == len(liste_scores_finaux) - 1:
+          print(f"Vous êtes arrivé {place_joueur}place")
 
+      reset_classement()
 
+    if restart_button.draw() == True:
+      game_over = False
+      game_score = reset_game()
 
-    # check pour un game over et reset
-    if game_over == True:
-        screen.blit(gm_img,(screen_widht / 2 - 192/2, 125))
-
-        if ranking_button.draw() == True:
-
-            classement()
-
-            for i in range(len(liste_scores_finaux)):
-                if game_score >= liste_scores_finaux[i][1]:
-                    if print_score == False:
-                        place_joueur = i+1
-                        print(f"Place : {i+1}    Nom : Joueur ; Score : {game_score}")
-                        print_score = True
-                    print(f"Place : {i+2}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
-                else:
-                    print(f"Place : {i+1}    Nom : {liste_scores_finaux[i][0]} ; Score : {liste_scores_finaux[i][1]}")
-                if i == len(liste_scores_finaux) - 1:
-                    print(f"Vous êtes arrivé {place_joueur}ème/er")
-
-            reset_classement()
-
-        if restart_button.draw() == True:
-            game_over = False
-            game_score = reset_game()
-
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-        if event.type == pygame.MOUSEBUTTONDOWN and flying == False and game_over == False:
-            flying = True
-        """
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      run = False
+    if event.type == pygame.MOUSEBUTTONDOWN and flying == False and game_over == False:
+      flying = True
+    """
         elif event.type == VIDEORESIZE:
             resize_window(event.dict['size'])
         """
 
-    pygame.display.flip()
-    pygame.display.update()
+  pygame.display.flip()
+  pygame.display.update()
 
 pygame.quit()
 
