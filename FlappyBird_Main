@@ -11,7 +11,7 @@ Si cela concorde, l'oiseau passe et le jeu continu sinon le jeu s'arrête
 Sinon 3 pts par obstacle franchi
 L'oiseau peut passer au max 4 obstacles
 On fait une moyenne des 10 résultats pour chaque personnage 
-qu'on affiche dans l'ordre croissant
+qu'on affiche dans l'ordre décroissant
 
 
 Auteurs :
