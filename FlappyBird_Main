@@ -228,8 +228,7 @@ last_pipe = pygame.time.get_ticks() - pipe_frequency
 pass_pipe = False
 game_score = 0
 number = 0
-print_score = False
-place_joueur = 0
+
 
 # création des différentes classes 
 
